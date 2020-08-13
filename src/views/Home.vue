@@ -1,18 +1,54 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="home"> 
+    <img src='../assets/logo.png' class='logo'>
+    
+    <h2><br>Music at distance:</h2>
+    <br><br>
+    <vs-button dark size="xl" @click="startListening"> <i class='bx bx-align-middle'></i> Start Listening </vs-button>
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+<script> 
+import {v4 as uuid} from 'uuid';
 
 export default {
-  name: 'Home',
-  components: {
-    HelloWorld
+  name: 'Home', 
+  methods: {
+    startListening(event) {
+      let room = this.createRoom();
+      this.$router.push(`room/${room}`);
+    },
+    createRoom() {
+      return uuid();
+    }
   }
 }
 </script>
+
+<style lang="scss">
+.home {
+  text-align: center;
+  padding-top: 100px;
+  padding-left: 50px;
+  padding-right: 50px;
+  height: 100vh;
+  
+  .vs-button {
+      display: inline-block;
+  }
+
+  i.bx.bx-align-middle {
+    transform: rotate(90deg);
+    transform-origin: center;
+    margin-right: 10px
+  }
+
+  .logo {
+    width: 150px;
+    height: auto;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.432);
+    border-radius: 100%;
+  }
+}
+
+</style>
