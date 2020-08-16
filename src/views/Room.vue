@@ -1,25 +1,26 @@
 <template>
   <div class="room"> 
+    <!-- {{$store.state.video}} -->
     <!-- <vs-button dark to='/' class="logout"> <i class='bx bxs-door-open'></i> Logout</vs-button> -->
     <div class="search-page">  <router-link to="/">
       <img src='../assets/logo.png' class='logo' :class="{small}"></router-link>
-      <search-video ref="search"></search-video>  
+      <search-page ref="search"></search-page>  
     </div>
     <div class="video-zone" :class="{open:videoPage}">
-      <video-page @toggle="videoPage=!videoPage"></video-page>
+      <player-page @toggle="videoPage=!videoPage"></player-page>
     </div>
   </div>
 </template>
 
 <script> 
-import searchVideo from '../components/searchVideo';
-import videoPage from '../components/VideoPage';
+import SearchPage from '../components/SearchPage';
+import PlayerPage from '../components/PlayerPage';
 
 export default {
   name: 'Room', 
   components: {
-    searchVideo,
-    videoPage
+    SearchPage,
+    PlayerPage
   },
   data:()=>({
     small: true,
@@ -28,11 +29,16 @@ export default {
   computed: { 
   },
   methods: { 
+  },
+  beforeMount() {
+    this.$store.dispatch('accessRoom', this.$route.params.roomid);
   }
 }
 </script>
 
 <style lang="scss"> 
+@import "../scss/_variable.scss";
+
 .room {
   position: relative;
   overflow: hidden;
@@ -48,9 +54,9 @@ export default {
       display: inline-block;
   }
  
-  i {
-    margin-right: 5px;
-  }
+  // i {
+  //   margin-right: 5px;
+  // }
 
   .search-page {
     --mini-video-player-height: 150px;
@@ -89,18 +95,18 @@ export default {
     position: absolute;
     z-index: 1;
     bottom: 0;
-    height: 100px;
+    height: $player-height;
     width: 100%;
     overflow: hidden;
     overflow-x: hidden;
     
-    text-align: center; 
+    // text-align: center; 
 
     background-color: white;
     
     box-shadow: 0px -10px 20px -20px rgba(var(--vs-dark), 1);
 
-    transition-duration: .2s;
+    transition-duration: .5s;
 
     &.open {
       height: 100vh;

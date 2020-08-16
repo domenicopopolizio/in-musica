@@ -1,12 +1,12 @@
 {
-  "short_name": "in-musica",
-  "name": "in-musica",
+  "short_name": "in musica",
+  "name": "in musica",
   "description": "Listen Music in real time with your friends!",
   "start_url":"/",
   "theme_color": "#000000",
   "scope": "/",
   "background_color": "#ffffff",
-  "display": "fullscreen",
+  "display": "standalone",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",

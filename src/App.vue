@@ -2,7 +2,14 @@
   <div id="app"> 
     <router-view/>
   </div>
-</template>
+</template> 
+<script>
+export default {
+  beforeMount() {
+    this.$store.dispatch('initFirebase');
+  }
+}
+</script>
 
 <style lang="scss">
 html, body {

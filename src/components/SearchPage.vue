@@ -28,10 +28,10 @@
 </template>
 
 <script> 
-import searchResult from './searchResult.vue';
+import searchResult from './search/SearchResult.vue';
 
 export default {
-    name: 'search-video',
+    name: 'search-page',
     components: {
         searchResult
     }, 
@@ -90,7 +90,7 @@ export default {
             return new Promise(async (resolve, reject) => {
                 let results = [];
                 for(let id of ids) {
-                    axios.get(`https://noembed.com/embed?url=https://youtube.com/watch?v=${id}&format=json`)
+                    this.$axios.get(`https://noembed.com/embed?url=https://youtube.com/watch?v=${id}&format=json`)
                     .then(data=>{
                         results.push(data.data);
                         if(results.length == ids.length) resolve(results);
@@ -103,7 +103,8 @@ export default {
             })
         },
         selectVideo(video) {
-            this.$emit('selected', video.id); 
+            console.log(video);
+            this.$store.commit('SET_VIDEO', video); 
         }, 
     },
     async mounted() { 

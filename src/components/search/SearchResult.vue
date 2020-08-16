@@ -1,5 +1,5 @@
 <template>
-  <div class="search-result">
+  <div class="search-result" @click="$emit('click')">
     <div class="thumbnail">
         <img :src="video.thumbnail_url" />
     </div>

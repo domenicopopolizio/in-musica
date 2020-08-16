@@ -16,6 +16,7 @@ export default {
   methods: {
     startListening(event) {
       let room = this.createRoom();
+      this.$store.dispatch('createRoom', room);
       this.$router.push(`room/${room}`);
     },
     createRoom() {
