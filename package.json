@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.1.0",
     "boxicons": "^2.0.5",
     "core-js": "^3.6.5",
     "firebase": "^7.18.0",

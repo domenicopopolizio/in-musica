@@ -15,7 +15,7 @@
                 <i class="bx bx-reset" v-if="$store.state.video.status==0"></i>
             </vs-button>
             
-            <vs-button dark class="restart-btn">
+            <vs-button dark class="restart-btn" @click="restartRequest">
                 <i class="bx bx-reset"></i>
             </vs-button>
         </div>
@@ -23,17 +23,25 @@
 </template>
 
 <script>
+import * as utils from "../../utils/index";
+
 export default {
     name: "player-controls",
     methods: {
-        toggleRequest() {
-            console.log(this.$store);
-            if(this.$store.state.localVideo.status == 1) { 
-                this.$store.commit('STOP_VIDEO', 0);
+        toggleRequest() { 
+            let time = utils.getCurrentTime(this.$store.state.video);
+            console.log(time);
+
+            if(this.$store.state.video.status == 1) { 
+                this.$store.commit('STOP_VIDEO', time);
             }
-            if(this.$store.state.localVideo.status != 1) { 
-                this.$store.commit('PLAY_VIDEO', 0);
+            else if(this.$store.state.video.status != 1) { 
+                this.$store.commit('PLAY_VIDEO', time);
             }
+        },
+        restartRequest() { 
+            this.$store.commit('STOP_VIDEO', 0);
+            this.$store.commit('PLAY_VIDEO', 0);
         }
     }
 }

@@ -15,9 +15,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     firebase,
-    videoRef: null,
-    video: null,
-    localVideo: {
+    videoRef: null, 
+    video: {
       id: null,
       status: null,
     },
@@ -25,7 +24,7 @@ export default new Vuex.Store({
   },
   mutations: {  
     SET_VIDEO(state, video) {  
-      state.videoRef.set({
+      let newVideo = {
         'id':utils.getId(video.url),
         'title':video.title,
         'author':video.author_name,
@@ -33,28 +32,39 @@ export default new Vuex.Store({
         'time':0,
         'total_time':'',
         'updated_at': (new Date()).toISOString(),
-      });
+      };
+      state.video = newVideo;
+      state.videoRef.set(newVideo);
     },
-    STOP_VIDEO(state, time) { 
+    STOP_VIDEO(state, time) {
+      state.video.time = time||0;
+      state.video.status = 2,
+      state.video.updated_at = (new Date()).toISOString();
       state.videoRef.update({
         'time':time||0,
-        'status':2
+        'status':2,
+        'updated_at': (new Date()).toISOString(),
       });
     },
-    PLAY_VIDEO(state, time) {
+    PLAY_VIDEO(state, time) { 
+      state.video.time = time||0;
+      state.video.status = 1,
+      state.video.updated_at = (new Date()).toISOString();
       state.videoRef.update({
         'time':time||0,
-        'status':1
+        'status':1,
+        'updated_at': (new Date()).toISOString(),
       })
     },
     RESTART_VIDEO(state) {
+      state.video.time = 0;
+      state.video.status = 2,
+      state.video.updated_at = (new Date()).toISOString();
       state.videoRef.update({
-        'status':1,
-        'time':0
+        'status':2,
+        'time':0,
+        'updated_at': (new Date()).toISOString(),
       })
-    },
-    SET_PLAYER(state, player) {
-      state.player = player;
     }
   },
   actions: {

@@ -27,5 +27,9 @@ export default {
 .video-page {
   height: 100vh;
   width: 100%;
+
+  .player {
+    height: 200px;
+  }
 }
 </style>

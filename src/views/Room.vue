@@ -24,7 +24,7 @@ export default {
   },
   data:()=>({
     small: true,
-    videoPage: false,
+    videoPage: true,
   }),
   computed: { 
   },
