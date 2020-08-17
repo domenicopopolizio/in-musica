@@ -41,7 +41,9 @@ export default {
         },
         restartRequest() { 
             this.$store.commit('STOP_VIDEO', 0);
-            this.$store.commit('PLAY_VIDEO', 0);
+            setTimeout((function() { 
+                this.$store.commit('PLAY_VIDEO', 0);
+            }).bind(this), 200);
         }
     }
 }

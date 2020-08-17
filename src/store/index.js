@@ -15,11 +15,15 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     firebase,
+    color: null,
     videoRef: null, 
     video: {
       id: null,
       status: null,
+      time: null,
+      updated_at: null,
     },
+    chat: null,
     player: null
   },
   mutations: {  
@@ -65,6 +69,13 @@ export default new Vuex.Store({
         'time':0,
         'updated_at': (new Date()).toISOString(),
       })
+    },
+    SEND_MESSAGE(state, message) {
+      state.chatRef.push({
+        message,
+        color: state.color,
+        time: (new Date()).toISOString()
+      })
     }
   },
   actions: {
@@ -92,7 +103,8 @@ export default new Vuex.Store({
         console.log(error);
       });
 
-      console.log(this.state.firebase.database())
+      this.state.color = utils.colorGenerator();
+      
     },
     createRoom({state}, uuid) { 
       let room = state.firebase.database().ref().child('rooms').child(uuid).set({
@@ -105,13 +117,31 @@ export default new Vuex.Store({
           'total_time':'',
           'updated_at': (new Date()).toISOString(),
         },  
+        'chat': []
       });
     },
     accessRoom({state}, uuid) {
       state.videoRef = state.firebase.database().ref(`rooms/${uuid}/video`);
       state.videoRef.on('value', (snapshot)=>{
-        state.video = snapshot.val();
+        let payload = snapshot.val(); 
+        if(state.video.updated_at) payload.updated_at = (new Date()).toISOString(); 
+        state.video = payload;
       });
+
+      state.chatRef = state.firebase.database().ref(`rooms/${uuid}/chat`);
+      state.chatRef.on('value', (snapshot)=>{
+        if(state.chat === null) {
+          state.chat = [];
+        }
+        else {
+          let keys = Object.keys(snapshot.val());
+
+          let key = keys.slice(-1)[0];
+          let mex = snapshot.val()[key];
+          mex.key = key;
+          state.chat.push(mex); 
+        }
+      })
     }
   },
   modules: {

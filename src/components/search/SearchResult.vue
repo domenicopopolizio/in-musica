@@ -1,11 +1,10 @@
 <template>
   <div class="search-result" @click="$emit('click')">
-    <div class="thumbnail">
-        <img :src="video.thumbnail_url" />
+    <div class="thumbnail" :style="{'backgroundImage': `url(${video.thumbnail_url})`}"> 
     </div>
     <div class="title">
         <h5>{{video.title}}</h5>
-        <span size="s" dark transparent>{{video.author_name}}</span>
+        <!-- <span size="s" dark transparent>{{video.author_name}}</span> -->
     </div>
   </div>
 </template>
@@ -24,7 +23,7 @@ export default {
 
 <style lang="scss">
 .search-result {
-    $height: 85px;
+    $height: 50px;
     $thumbnail-width: $height*1.33;
     box-shadow: 0px 10px 20px -20px rgba(var(--vs-dark), 1);
     background-color: rgba(var(--vs-gray-2), 1);
@@ -33,12 +32,8 @@ export default {
     width: 100%;
     max-width: 400px;
     margin: 20px 40px 20px 0;
-
-    display: inline-grid;
-    grid-template-areas: "img title"
-                         "img btn";
-    grid-template-rows: 2fr 1fr;
-    grid-template-columns: $thumbnail-width 1fr;
+    text-align: left;
+    display: inline-block;
 
     &:hover {
         cursor: pointer; 
@@ -51,34 +46,31 @@ export default {
         filter: brightness(80%);
     }
 
-    div.thumbnail {
-        grid-area: "img";
-        position: relative;
-        img {
-            height: $height;
-            width: auto;
-            border-radius: 12px 0 0 12px;
-        }
+    div.thumbnail { 
+        display: inline-flex;
+        height: 40px;
+        width: 40px; 
+        background-size:contain;
+        border-radius:10px;
+        margin: 5px 10px; 
+        float: left;
     }
     div.title {
+        display: inline-flex;
         position: relative;
-        h5 { 
-            position:absolute;
-            padding: 10px;    
+        width: 70%;
+        height: 100%; 
+        margin-left: 5px;
+        align-items: center;
+        float: left; 
+        h5 {   
             margin:0;
-            width: 80%; 
+            max-width: 100%; 
             text-align: left;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        span {
-            position: absolute;
-            bottom: 15px;
-            left: 12px;
-            font-size: 13px;
-        }
+        } 
     }
 }
 </style>

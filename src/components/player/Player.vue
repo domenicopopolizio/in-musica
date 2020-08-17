@@ -3,7 +3,7 @@
         <youtube class="youtube-player" ref="videoPlayer" :player-vars="playerVars"></youtube>
         <vs-dialog class="dialog" width="550px" not-center v-model="prompt">
             <template #header>
-            <h4 class="not-margin">
+            <h4 class="not-margin danger">
                 Go To <b>Youtube</b>
             </h4>
             </template>
@@ -54,37 +54,36 @@ export default {
     watch: {
         video: {
             deep: true, 
-            handler(newVideo, currentVideo) {
-                // debugger;
+            handler(newVideo, currentVideo) { 
+
                 let player = this.$refs.videoPlayer.player; 
                 
-                if(currentVideo.id != newVideo.id) {  
+                if(currentVideo.id != newVideo.id) {   
                     player.cueVideoById(newVideo.id, utils.getCurrentTime(newVideo)).then(function(){
                         if(newVideo.status == 1 ) {
-                            player.playVideo();
-                            console.log('play');
+                            player.playVideo(); 
                         } 
                         if(newVideo.status == 2 ) {
-                            player.pauseVideo(); 
-                            console.log('stop');
+                            player.pauseVideo();  
                         } 
                     });  
                     // player.playVideoAt(utils.getCurrentTime(newVideo));
                 }  
                 else { 
-                    if(newVideo.status == 1 ) {
+ 
+                    if(newVideo.status == 1) {
                         player.playVideo();
-                        console.log('play');
+                        // console.log('seekto2', utils.getCurrentTime(newVideo))
+                        // player.seekTo(utils.getCurrentTime(newVideo));
                     }
                     if(newVideo.status == 2) {
-                        player.pauseVideo(); 
-                        console.log('stop');
+                        player.pauseVideo();
                         player.seekTo(utils.getCurrentTime(newVideo));
                     }
                     
-                    if(utils.getCurrentTime(currentVideo) != utils.getCurrentTime(newVideo)) {
-                        player.seekTo(utils.getCurrentTime(newVideo));
-                    }
+                    // if(utils.getCurrentTime(currentVideo) != utils.getCurrentTime(newVideo)) {
+                    //     player.seekTo(utils.getCurrentTime(newVideo));
+                    // }
                 }
             }
         }
@@ -103,7 +102,8 @@ export default {
 
 <style lang="scss">
 .player {
-    cursor: pointer;
+    cursor: pointer; 
+    box-shadow: 0px 10px 20px -20px rgba(var(--vs-dark), 1);
     
     // padding: 20px;
     // text-align: center;
@@ -121,51 +121,6 @@ export default {
 
 
 
-// dialog
-    .con-footer {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-    }
-
-    .not-margin {
-        margin: 0px;
-        font-weight: normal;
-        padding: 10px;
-        padding-bottom: 0px;
-
-        b {
-            color: rgb(var(--vs-danger));
-        }
-    }
-
-    .con-content {
-        width: 100%;
-        
-        p {
-            font-size: 0.8rem;
-            padding: 0px 10px;
-        }
-
-        .vs-checkbox-label {
-            font-size: 0.8rem;
-        }
-
-        .vs-input-parent {
-            width: 100%;
-        }
-
-        .vs-input-content {
-            margin: 10px 0px;
-            width: calc(100%);
-
-            
-            .vs-input {
-                width: 100%;
-            }
-        }
-
-    } 
 
 
 </style>
