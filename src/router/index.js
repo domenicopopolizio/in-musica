@@ -10,9 +10,9 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home
-  },
+  }, 
   {
-    path: '/room/:roomid',
+    path: '/room/:roomid/:video?',
     name: 'Room',
     component: Room
   }

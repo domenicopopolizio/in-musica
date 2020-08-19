@@ -32,7 +32,7 @@ export default {
   padding-top: 100px;
   padding-left: 50px;
   padding-right: 50px;
-  height: 100vh;
+  height: calc(100vh - 100px);
   
   .vs-button {
       display: inline-block;

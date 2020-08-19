@@ -7,7 +7,7 @@
         <img src='../assets/logo.png' class='logo' :class="{small}">
       </router-link>
       <vs-button class="add-person" success @click="invite"> <i class="material-icons">person_add</i> Invite</vs-button>
-      
+      <vs-button class="lock" dark @click="lock"> <i class="bx bxs-lock"></i></vs-button>
       <search-page ref="search"></search-page>  
     </div>
     <div class="video-zone" :class="{open:videoPage}">
@@ -34,7 +34,7 @@
         </div>
       </template>
     </vs-dialog>
- 
+    <div class="full-screen-div" ref="fullScreenDiv"></div>
   </div>
 </template>
 
@@ -56,16 +56,40 @@ export default {
   computed: { 
     video() {
       return this.$store.state.video;
+    },
+    routeVideoPage() {
+      return this.$route.params.video;
     }
   },
   watch: {
     video: {
+      immediate: true,
       deep: true,
       handler(newVideo, oldVideo) {
         if(!oldVideo.id && newVideo.id) {
           this.videoPage = true;
         }
       }
+    },
+    routeVideoPage: {
+      immediate: true, 
+      handler() {
+        this.videoPage = this.routeVideoPage;
+      }
+    },
+    videoPage: {
+      immediate: true,      
+      handler() {  
+        if(this.videoPage) {
+          if(!this.routeVideoPage)
+            this.$router.push({params:{video:'video'}});
+        }
+        else { 
+          if(this.routeVideoPage)
+            this.$router.push({params:{video:undefined}});
+        }
+      }
+      
     }
   },
   methods: {  
@@ -91,6 +115,19 @@ export default {
         document.execCommand("copy");
         document.body.removeChild(copyText);
         this.prompt = true;
+      }
+    },
+    lock() {
+      let elem = this.$refs.fullScreenDiv;
+
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.mozRequestFullScreen) { /* Firefox */
+        elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE/Edge */
+        elem.msRequestFullscreen();
       }
     }
   },
@@ -152,11 +189,16 @@ export default {
     .add-person {
       top: 10px;
       left: 10px;
+
+      i {
+        margin-right:  5px;
+      }
     }
 
     .lock {
-      top: 50px;
-      left: 10px;
+      top: 10px;
+      left: 95px;
+      width: 30px;
     }
 
     .add-person, .lock {
@@ -164,12 +206,12 @@ export default {
       // width: 60px;
       // height: 60px;
       // border-radius: 60px;
-
+      
       i {
         font-size: 1.1em;
-        margin-right:  5px;
       }
     }
+
 
     .search-video {
       margin-top: 5px;
@@ -201,6 +243,13 @@ export default {
   }
 }
 
+
+.full-screen-div {
+  background-color: black;
+  overflow: hidden;
+  height: 0;
+  width: 0;
+}
 
 
 </style>
