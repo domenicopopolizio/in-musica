@@ -5,17 +5,17 @@
         
     <h2>Search Song:</h2>
 
-    <div class="search-container">
+    <form class="search-container" @submit="search">
         
-        <vs-input ref="search" type="search" v-model="q" placeholder="Song Title" @change="search">
+        <vs-input ref="search" type="search" v-model="q" placeholder="Song Title">
             <template #icon>
             <i class='bx bx-search-alt-2'></i>
             </template>
         </vs-input>
         <br>
-        <vs-button dark @click="search"> Search </vs-button>
+        <vs-button dark> Search </vs-button>
         
-    </div>
+    </form>
     <div class="results"> 
         <search-result v-for="result in results" :key="result.id" 
             :video="result"
@@ -52,6 +52,7 @@ export default {
             this.$emit('q', this.q);
         },
         newq() {
+            this.loading_results++; 
             this.$refs.youtube.player.cuePlaylist({
                 list:this.newq,
                 listType:'search',
@@ -71,9 +72,10 @@ export default {
         }
     },
     methods: {
-        search() { 
+        search(ev) { 
+            ev.preventDefault();
+
             if(this.q) {
-                this.loading_results++; 
                 this.newq = this.q; 
             }
         }, 
