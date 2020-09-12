@@ -42,7 +42,7 @@ export default {
             showinfo: 0,
             disablekb: 1,
             fs: 0,
-            playsinline: 0, 
+            playsinline: 1, 
             rel: 0,
         },
     }),
