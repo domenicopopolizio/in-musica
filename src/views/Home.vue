@@ -5,14 +5,26 @@
     <h2><br>Music at distance:</h2>
     <br><br>
     <vs-button dark size="xl" @click="startListening"> <i class='bx bx-align-middle'></i> Start Listening </vs-button>
+
+    <div class="history">
+      <list-img-element 
+      v-for="room in $store.state.roomsHistory"
+      :key="room.uuid"
+      :image="`linear-gradient(0deg, ${room.color}, ${room.color})`"
+      @click="accessRoom(room)">
+       {{room.title}}  <!--  <span class="edit-btn"><i class="bx bx-pencil"></i></span> -->
+      </list-img-element>
+    </div>
   </div>
 </template>
 
 <script> 
 import {v4 as uuid} from 'uuid';
+import ListImgElement from '../components/ListImgElement';
 
 export default {
   name: 'Home', 
+  components: {ListImgElement},
   methods: {
     startListening(event) {
       let room = this.createRoom();
@@ -21,7 +33,11 @@ export default {
     },
     createRoom() {
       return uuid();
+    },
+    accessRoom(room) {
+      this.$router.push(`room/${room.uuid}`);
     }
+    
   }
 }
 </script>
@@ -49,6 +65,30 @@ export default {
     height: auto;
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.432);
     border-radius: 100%;
+  }
+
+  .history {
+    text-align: center;
+    width: 100%;
+    height: fit-content;
+    margin-top: 50px;
+
+    .thumbnail {
+      display: in;
+    }
+    .thumbnail:before {
+      font-family: 'boxicons';
+      content: "\eb66";
+      color: white;
+      font-size: 20px;
+    }
+
+    // .edit-btn {
+    //   font-size: 1.5em; 
+    //   position: absolute;
+    //   right: 0;
+    //   top: 20%;
+    // }
   }
 }
 

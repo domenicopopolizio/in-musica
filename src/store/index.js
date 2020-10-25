@@ -12,6 +12,23 @@ import * as utils from "../utils/index";
 Vue.use(Vuex)
 
 
+function hashCode(str) { // java String#hashCode
+  var hash = 0;
+  for (var i = 0; i < str.length; i++) {
+     hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return hash;
+} 
+
+function intToRGB(i){
+  var c = (i & 0x00FFFFFF)
+      .toString(16)
+      .toUpperCase();
+
+  return "#"+"00000".substring(0, 6 - c.length) + c;
+}
+ 
+
 export default new Vuex.Store({
   state: {
     firebase,
@@ -24,7 +41,8 @@ export default new Vuex.Store({
       updated_at: null,
     },
     chat: null,
-    player: null
+    player: null,
+    roomsHistory: []
   },
   mutations: {  
     SET_VIDEO(state, video) {  
@@ -79,6 +97,22 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    initApp({state}) {
+      let history = localStorage.getItem("roomsHistory");
+      if(history) {
+        try {
+          state.roomsHistory = JSON.parse(history);
+        }
+        catch(e) {
+          console.log(e);
+          state.roomsHistory = [];
+          localStorage.setItem("roomsHistory", JSON.stringify([]));
+        }
+      }
+      else {
+        localStorage.setItem("roomsHistory", JSON.stringify([]));
+      }
+    },
     initFirebase() {
       const projectId = 'in-musica';
 
@@ -141,7 +175,36 @@ export default new Vuex.Store({
           mex.key = key;
           state.chat.push(mex); 
         }
-      })
+      }) 
+
+
+      /// REGISTER HISTORY OF ROOMS
+
+      let now = new Date();
+      let year = (""+now.getFullYear()).padStart(4, "0");
+      let month = (""+now.getMonth()).padStart(2, "0");
+      let day = (""+now.getDate()).padStart(2, "0");
+      let hours = (""+now.getHours()).padStart(2, "0");
+      let minutes = (""+now.getMinutes()).padStart(2, "0");
+      let timeString = `${year}-${month}-${day} ${hours}:${minutes}`;
+      let room = {
+        uuid: uuid,
+        time: now,
+        color: intToRGB(hashCode(uuid)),
+        title: `${timeString} - ${uuid.slice(-5)}`,
+      } 
+      let rooms = state.roomsHistory.map(x=>x.uuid); 
+      let roomPos = rooms.indexOf(uuid);   
+      if(roomPos !==  -1) { 
+        state.roomsHistory.splice(roomPos, 1);
+      }
+       
+      state.roomsHistory.unshift(room);
+
+      state.roomsHistory = state.roomsHistory.slice(0, 4);
+      
+      localStorage.setItem('roomsHistory', JSON.stringify(state.roomsHistory));
+      
     }
   },
   modules: {

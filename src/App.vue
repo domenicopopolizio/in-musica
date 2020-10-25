@@ -6,6 +6,7 @@
 <script>
 export default {
   beforeMount() {
+    this.$store.dispatch('initApp');
     this.$store.dispatch('initFirebase');
   }
 }
