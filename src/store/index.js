@@ -9,6 +9,7 @@ import "firebase/firestore";
 
 import * as utils from "../utils/index";
 
+
 Vue.use(Vuex)
 
 
@@ -47,9 +48,9 @@ export default new Vuex.Store({
   mutations: {  
     SET_VIDEO(state, video) {  
       let newVideo = {
-        'id':utils.getId(video.url),
+        'id':video.id,
         'title':video.title,
-        'author':video.author_name,
+        'author':video.channel,
         'status':1,
         'time':0,
         'total_time':'',
@@ -111,7 +112,8 @@ export default new Vuex.Store({
       }
       else {
         localStorage.setItem("roomsHistory", JSON.stringify([]));
-      }
+      } 
+
     },
     initFirebase() {
       const projectId = 'in-musica';

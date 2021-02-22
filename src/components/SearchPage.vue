@@ -1,8 +1,5 @@
 <template>
-  <div class="search-video">
-    <youtube ref="youtube" class="yt" :player-vars="playerVars" height="0" width="0" @cued="cued"></youtube> 
-        
-        
+  <div class="search-video">  
     <h2>Search Song:</h2>
 
     <form class="search-container" @submit="search">
@@ -43,28 +40,34 @@ export default {
         playerVars: {
             autoplay: 0,
             controls: 0, 
+            origin: location.origin,
+            enablejsapi:1
         },
         loading_results: 0,
         loading: null
     }),
     watch: {
         q() {
+            console.log("emitting q")
             this.$emit('q', this.q);
         },
-        newq() {
+        newq() { 
+            console.log("newq")
             this.loading_results++; 
-            this.$refs.youtube.player.cuePlaylist({
-                list:this.newq,
-                listType:'search',
-                autoplay: false
-            }); 
+            this.search_from_django();
+            // this.$refs.youtube.player.loadPlaylist({
+            //     list:this.newq,
+            //     listType:'search',
+            //     autoplay: false, 
+            // });  
         },
         loading_results(newVal, oldVal) {
+            console.log("loading_results")
             if(oldVal <= 0 && newVal > 0)  {
                 this.loading = this.$vs.loading({
                     type: 'scale',
                     color: '#000000'
-                });
+                }); 
             }        
             if(oldVal > 0 && newVal <= 0) {
                 this.loading.close();
@@ -73,41 +76,25 @@ export default {
     },
     methods: {
         search(ev) { 
+            console.log("search")
             ev.preventDefault();
 
             if(this.q) {
                 this.newq = this.q; 
             }
         }, 
-        async cued() {
-            try {
-                let ids = await this.$refs.youtube.player.getPlaylist(); 
-                this.results = await this.getVideos(ids.slice(0, 4));
-                this.loading_results--; 
-            } catch(e) {
-                this.loading_results--;
-            }
-        },
-        getVideos(ids) {
-            return new Promise(async (resolve, reject) => {
-                let results = [];
-                for(let id of ids) {
-                    this.$axios.get(`https://noembed.com/embed?url=https://youtube.com/watch?v=${id}&format=json`)
-                    .then(data=>{
-                        results.push(data.data);
-                        if(results.length == ids.length) resolve(results);
-                    })
-                    .catch(r=>{
-                        results.push({})
-                        if(results.length == ids.length) resolve(results);
-                    })
-                }
-            })
-        },
+        async search_from_django() {
+            const API_SOURCE = 'https://domenicopopolizio.pythonanywhere.com/search-music';
+            let res = await fetch(API_SOURCE+'?q='+encodeURIComponent(this.newq));
+            let videos = await res.json();
+            this.results = videos.videos; 
+            this.loading_results--; 
+        }, 
         selectVideo(video) {
+            console.log("select video")
             console.log(video);
             this.$store.commit('SET_VIDEO', video); 
-        }, 
+        },  
     },
     async mounted() { 
         

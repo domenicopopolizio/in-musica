@@ -21,7 +21,7 @@ export default {
     Chat
   },
   mounted() {
-    this.$store.commit('SET_PLAYER', this.$refs.videoPlayer);
+    // this.$store.commit('SET_PLAYER', this.$refs.videoPlayer);
   }
 }
 </script>

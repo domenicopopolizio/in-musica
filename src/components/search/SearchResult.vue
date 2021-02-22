@@ -1,5 +1,5 @@
 <template>
-  <list-img-element :image="`url(${video.thumbnail_url})`"  @click="$emit('click')"> {{video.title}} </list-img-element>
+  <list-img-element :image="`url(${video.thumbnails[0]})`"  @click="$emit('click')"> {{video.title}} </list-img-element>
 </template>
 
 <script>
